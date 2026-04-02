@@ -1,7 +1,7 @@
 import streamlit as st
 from pdf_utils import extract_text_from_pdf
 from chunking import paragraph_chunking  # ✅ use paragraph chunking
-from embedding import create_embeddings, build_faiss_index, retrieve
+from embedding import create_embeddings, retrieve
 from generator import generate_answer
 import tempfile
 
@@ -31,10 +31,9 @@ if uploaded_file is not None:
     chunks = paragraph_chunking(pages)
 
     embeddings = create_embeddings(chunks)
-    index = build_faiss_index(embeddings)
 
     # Store in session
-    st.session_state["index"] = index
+    st.session_state["embeddings"] = embeddings
     st.session_state["chunks"] = chunks
 
     st.info("Document processed. You can now ask questions!")
@@ -45,11 +44,11 @@ if uploaded_file is not None:
 query = st.text_input("Ask a question about the document")
 
 if query and "index" in st.session_state:
-    retrieved = retrieve(
-        query,
-        st.session_state["index"],
-        st.session_state["chunks"]
-    )
+   retrieved = retrieve(
+    query,
+    st.session_state["embeddings"],
+    st.session_state["chunks"]
+)
 
     # -----------------------------
     # Show Retrieved Context (Clean UI)
