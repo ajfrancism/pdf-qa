@@ -53,16 +53,16 @@ if query and "index" in st.session_state:
     # -----------------------------
     # Show Retrieved Context (Clean UI)
     # -----------------------------
-    st.subheader("📄 Retrieved Context")
+st.subheader("📄 Retrieved Context")
 
-    for r in retrieved:
+for r in retrieved:
         with st.expander(f"Page {r['page']} | Chunk {r['chunk_id']}"):
             st.write(r["text"])  # ✅ full text (no truncation)
 
     # -----------------------------
     # Generate Answer
     # -----------------------------
-    answer = generate_answer(query, retrieved)
+answer = generate_answer(query, retrieved)
 
-    st.subheader("💬 Answer")
-    st.write(answer)
+st.subheader("💬 Answer")
+st.write(answer)
