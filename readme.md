@@ -1,85 +1,110 @@
-# 📄 RAG-Based PDF Question Answering System
+# RAG PDF Question Answering System
 
-## 🚀 Overview
-This project is an end-to-end Retrieval-Augmented Generation (RAG) system that allows users to upload a PDF and ask natural language questions about its content.
+An end-to-end Retrieval-Augmented Generation (RAG) system that enables users to upload PDFs and query them using natural language.
 
-The system extracts text, chunks it into meaningful segments, retrieves relevant context, and generates grounded answers.
-
----
-
-## 🧠 Architecture
-
-PDF → Text Extraction → Chunking → Embeddings → Vector Search → LLM → Answer
+Built as part of an AI Research Engineer Internship assessment, this project demonstrates document understanding, semantic retrieval, and grounded answer generation using modern LLM workflows.
 
 ---
 
-## ⚙️ Features
+## 🌐 Live Demo
 
-- PDF text extraction using PyMuPDF
-- Two chunking strategies:
-  - Fixed-size chunking with overlap
-  - Paragraph-based chunking
-- Metadata tracking (page number, chunk index, character offsets)
-- Modular and extensible pipeline
+[Live Demo](https://pdf-app-atticai.streamlit.app/)
 
 ---
 
-## 📂 Project Structure
-rag-project/
-├── main.py
-├── pdf_utils.py
-├── chunking.py
-├── test_chunking.py
-└── README.md
+## Features
+
+- Upload PDF documents (up to 20 pages)
+- Extract structured text using PyMuPDF
+- Semantic chunking (paragraph-based)
+- Embedding generation using Sentence Transformers
+- Similarity-based retrieval (cosine similarity)
+- LLM-powered answer generation (OpenAI)
+- Transparent retrieval (view source chunks)
 
 ---
 
-## 🔍 Chunking Strategies
+## How It Works
 
-### 1. Fixed Chunking
-- Splits text into fixed-size segments
-- Uses overlap to preserve context
+1. **PDF Upload**
+   - User uploads a document via Streamlit UI
 
-### 2. Paragraph Chunking
-- Splits text based on paragraph boundaries
-- Preserves semantic meaning
+2. **Text Extraction**
+   - Extracts text page-by-page using PyMuPDF
 
----
+3. **Chunking**
+   - Splits text into semantically meaningful paragraphs
 
-## 🧪 Testing
+4. **Embedding**
+   - Converts chunks into vector representations using `all-MiniLM-L6-v2`
 
-Basic unit tests are implemented to validate chunking logic.
+5. **Retrieval**
+   - Computes cosine similarity between query and chunks
+   - Returns top-k relevant chunks
 
-Run tests using: pytest
-
-
----
-
-## ⚡ How to Run
-python main.py
-
+6. **Answer Generation**
+   - Uses OpenAI model to generate grounded answers
+   - Ensures responses are based only on retrieved context
 
 ---
 
-## 🛠️ Tech Stack
+## Design Decisions
+
+### 🔹 Chunking Strategy
+- Implemented **paragraph-based chunking** to preserve semantic meaning
+- Avoids sentence truncation issues seen in fixed-size chunking
+
+### 🔹 Retrieval Method
+- Used **NumPy cosine similarity** instead of FAISS
+- Chosen for **deployment compatibility (Python 3.14)** and simplicity
+
+### 🔹 Hallucination Control
+- Prompt explicitly restricts model to provided context
+- Returns fallback if answer is not found
+
+### 🔹 Transparency
+- Displays retrieved chunks in UI for interpretability
+
+---
+
+## Limitations
+
+- Dependent on OpenAI API (cost + rate limits)
+- PDF formatting can affect extraction quality
+- No multi-document support yet
+
+---
+
+## Tech Stack
 
 - Python
+- Streamlit
 - PyMuPDF
-- FastAPI (upcoming)
-- FAISS (upcoming)
-- Sentence Transformers (upcoming)
+- Sentence Transformers
+- NumPy
+- OpenAI API
 
 ---
 
-## 📌 Future Improvements
+## ▶️ How to Run Locally
 
-- Add embeddings and vector search
-- Implement question answering using LLM
-- Build API and frontend interface
-- Deploy to public URL
+```bash
+git clone https://github.com/yourusername/pdf-qa.git
+cd pdf-qa
+pip install -r requirements.txt
+streamlit run app.py
 
----
+## Environment Variables
+ Set your API key locally:
 
-## 🧠 Notes
+### Windows
+setx OPENAI_API_KEY "your-api-key"
 
-This project is part of a technical assessment focusing on building an end-to-end AI system with strong emphasis on engineering quality, experimentation, and documentation.
+## Mac OS / Linux 
+export OPENAI_API_KEY="your-api-key"
+
+Note: Never commit your API keys to version control. Use environment variables or Streamlit Secrets instead.
+
+## 🧠 Key Insight
+
+This project highlights the importance of chunking strategy and retrieval quality in RAG systems. Small design decisions—such as paragraph-based chunking or similarity computation—significantly impact answer accuracy and user experience.
